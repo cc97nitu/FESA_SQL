@@ -1,0 +1,9 @@
+!.gitignore
+.*
+*.bin
+*.pyc
+*.npy
+*.npz
+**/venv/
+.idea/
+**/.ipynb_checkpoints
