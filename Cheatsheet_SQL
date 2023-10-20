@@ -1,0 +1,10 @@
+---- In-memory size of database.
+SELECT pg_size_pretty( pg_database_size('dbname') );
+
+
+---- In-memory size of table.
+SELECT pg_size_pretty( pg_total_relation_size('tablename') );
+
+
+---- Count rows in table.
+SELECT count(*) AS exact_count FROM mytable;
