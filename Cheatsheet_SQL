@@ -1,3 +1,12 @@
+---- Create DB.
+create database fesa_test;
+
+
+---- Create User
+CREATE USER fesa_tester WITH PASSWORD 'save_bpm';
+GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA public TO fesa_tester;
+
+
 ---- In-memory size of database.
 SELECT pg_size_pretty( pg_database_size('dbname') );
 

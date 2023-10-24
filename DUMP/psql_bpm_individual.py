@@ -118,5 +118,20 @@ FAIR_SELECTOR = "FAIR.SELECTOR.S=8"
 
 
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(
+                    prog='SQL_dump_BPM',
+                    description='Dump BPM data to SQL database.',
+    )
+
+    parser.add_argument("--bpm", type=int, required=True)
+
+    args = parser.parse_args()
+
+    PROPERTY_NAME = "GS{:02d}DX/Acquisition".format(args.bpm)
+    TABLE_NAME = "gs{:02}dx_acquisition".format(args.bpm)
+    print(PROPERTY_NAME, TABLE_NAME)
+    
     resp = main(createInsertionStatement(TABLE_NAME, FIELD_NAMES))
 
