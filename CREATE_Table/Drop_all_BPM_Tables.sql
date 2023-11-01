@@ -1,0 +1,12 @@
+DROP TABLE gs01dx_acquisition;
+DROP TABLE gs02dx_acquisition;
+DROP TABLE gs03dx_acquisition;
+DROP TABLE gs04dx_acquisition;
+DROP TABLE gs05dx_acquisition;
+DROP TABLE gs06dx_acquisition;
+DROP TABLE gs07dx_acquisition;
+DROP TABLE gs08dx_acquisition;
+DROP TABLE gs09dx_acquisition;
+DROP TABLE gs10dx_acquisition;
+DROP TABLE gs11dx_acquisition;
+DROP TABLE gs12dx_acquisition;

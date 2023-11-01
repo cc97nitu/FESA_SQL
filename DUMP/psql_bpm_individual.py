@@ -2,6 +2,7 @@
 
 """Store single BPM readings to postgres."""
 
+import time
 from datetime import datetime
 import numpy as np
 import psycopg2
@@ -10,6 +11,13 @@ from psycopg2.extensions import register_adapter, AsIs
 from pyda import SimpleClient
 from pyda.data import DataFilter, TimingSelector
 from pyda_rda3 import RdaProvider
+
+
+TERMINAL_COLORS = [
+"\u001b[31m", "\u001b[32m", "\u001b[33m", "\u001b[34m", "\u001b[35m", "\u001b[36m", "\u001b[37m", "\u001b[31;1m", "\u001b[32;1m", "\u001b[33;1m", "\u001b[34;1m", "\u001b[35;1m",
+]
+
+TERMINAL_COLOR_RESET = "\u001b[0m"
 
 
 def adapt_numpy_array(numpy_array):
@@ -76,15 +84,21 @@ def main(insertionStatement) -> None:
     it = 0
     for response in subscription:
 
-        ts = response.value["sequenceStartStamp"] / 1e9
-        print(datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f'))
+        ts = response.value["acquisitionStamp"] / 1e9
+        ts_datetime = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
         
         # store in database
+        t_start = time.time()
         values = [response.value[f] for f in FIELD_NAMES]
         crsr.execute(insertionStatement, values)
         dbcon.commit()
 
-        print("committed S={}:P={}".format(response.value["sequenceIndex"], response.value["processIndex"]))
+        t_end = time.time() - t_start
+
+        print(TERMINAL_COLORS[args.bpm - 1] + "BPM {:02d}".format(args.bpm) + 
+              " committed S={}:P={}".format(response.value["sequenceIndex"], response.value["processIndex"]) +
+              "    " + ts_datetime + "    completed within {:.2f}".format(t_end) +
+              TERMINAL_COLOR_RESET)
 
         #return response
 
@@ -108,13 +122,13 @@ PROPERTY_NAME = "GS01DX/Acquisition"
 DATA_FILTER = DataFilter(acqModeFilter=np.int32(2))
 TABLE_NAME = "gs01dx_acquisition"
 FIELD_NAMES = ["processStartStamp", "sequenceStartStamp", "eventStamp", "acquisitionStamp", "processIndex", "sequenceIndex", "gainTimestamp",
-               Array("gainValue"), "acquiredOk", "offset", "temperature", Array("beamPosition"), Array("beamPosition_dim3_labels"), Array("sumSignal")]
+               Array("gainValue"), "acqMode", "acquiredOk", "offset", "temperature", Array("beamPosition"), Array("beamPosition_dim3_labels"), Array("sumSignal")]
 
 
 ##############################################
 ############## FAIR Selector #################
 ##############################################
-FAIR_SELECTOR = "FAIR.SELECTOR.S=8"
+FAIR_SELECTOR = "FAIR.SELECTOR.ALL"
 
 
 if __name__ == "__main__":
@@ -129,9 +143,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    ##############################################
+    ############## FESA property #################
+    ##############################################
     PROPERTY_NAME = "GS{:02d}DX/Acquisition".format(args.bpm)
     TABLE_NAME = "gs{:02}dx_acquisition".format(args.bpm)
     print(PROPERTY_NAME, TABLE_NAME)
     
+    # run dump loop
     resp = main(createInsertionStatement(TABLE_NAME, FIELD_NAMES))
 
