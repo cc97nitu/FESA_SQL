@@ -1,4 +1,4 @@
-CREATE TABLE gs01dx_acquisition (
+CREATE TABLE bpm_fesa_dump.gs01dx_acquisition (
     processIndex                integer,
     sequenceIndex               integer,
 --    processStartStamp       bigint  PRIMARY KEY,
@@ -18,7 +18,7 @@ CREATE TABLE gs01dx_acquisition (
     sumSignal                   real[]
 );
 
-CREATE TABLE gs02dx_acquisition (
+CREATE TABLE bpm_fesa_dump.gs02dx_acquisition (
     processIndex                integer,
     sequenceIndex               integer,
 --    processStartStamp       bigint  PRIMARY KEY,
@@ -38,7 +38,7 @@ CREATE TABLE gs02dx_acquisition (
     sumSignal                   real[]
 );
 
-CREATE TABLE gs03dx_acquisition (
+CREATE TABLE bpm_fesa_dump.gs03dx_acquisition (
     processIndex                integer,
     sequenceIndex               integer,
 --    processStartStamp       bigint  PRIMARY KEY,
@@ -58,7 +58,7 @@ CREATE TABLE gs03dx_acquisition (
     sumSignal                   real[]
 );
 
-CREATE TABLE gs04dx_acquisition (
+CREATE TABLE bpm_fesa_dump.gs04dx_acquisition (
     processIndex                integer,
     sequenceIndex               integer,
 --    processStartStamp       bigint  PRIMARY KEY,
@@ -78,7 +78,7 @@ CREATE TABLE gs04dx_acquisition (
     sumSignal                   real[]
 );
 
-CREATE TABLE gs05dx_acquisition (
+CREATE TABLE bpm_fesa_dump.gs05dx_acquisition (
     processIndex                integer,
     sequenceIndex               integer,
 --    processStartStamp       bigint  PRIMARY KEY,
@@ -98,7 +98,7 @@ CREATE TABLE gs05dx_acquisition (
     sumSignal                   real[]
 );
 
-CREATE TABLE gs06dx_acquisition (
+CREATE TABLE bpm_fesa_dump.gs06dx_acquisition (
     processIndex                integer,
     sequenceIndex               integer,
 --    processStartStamp       bigint  PRIMARY KEY,
@@ -118,7 +118,7 @@ CREATE TABLE gs06dx_acquisition (
     sumSignal                   real[]
 );
 
-CREATE TABLE gs07dx_acquisition (
+CREATE TABLE bpm_fesa_dump.gs07dx_acquisition (
     processIndex                integer,
     sequenceIndex               integer,
 --    processStartStamp       bigint  PRIMARY KEY,
@@ -138,7 +138,7 @@ CREATE TABLE gs07dx_acquisition (
     sumSignal                   real[]
 );
 
-CREATE TABLE gs08dx_acquisition (
+CREATE TABLE bpm_fesa_dump.gs08dx_acquisition (
     processIndex                integer,
     sequenceIndex               integer,
 --    processStartStamp       bigint  PRIMARY KEY,
@@ -158,7 +158,7 @@ CREATE TABLE gs08dx_acquisition (
     sumSignal                   real[]
 );
 
-CREATE TABLE gs09dx_acquisition (
+CREATE TABLE bpm_fesa_dump.gs09dx_acquisition (
     processIndex                integer,
     sequenceIndex               integer,
 --    processStartStamp       bigint  PRIMARY KEY,
@@ -178,7 +178,7 @@ CREATE TABLE gs09dx_acquisition (
     sumSignal                   real[]
 );
 
-CREATE TABLE gs10dx_acquisition (
+CREATE TABLE bpm_fesa_dump.gs10dx_acquisition (
     processIndex                integer,
     sequenceIndex               integer,
 --    processStartStamp       bigint  PRIMARY KEY,
@@ -198,7 +198,7 @@ CREATE TABLE gs10dx_acquisition (
     sumSignal                   real[]
 );
 
-CREATE TABLE gs11dx_acquisition (
+CREATE TABLE bpm_fesa_dump.gs11dx_acquisition (
     processIndex                integer,
     sequenceIndex               integer,
 --    processStartStamp       bigint  PRIMARY KEY,
@@ -218,7 +218,7 @@ CREATE TABLE gs11dx_acquisition (
     sumSignal                   real[]
 );
 
-CREATE TABLE gs12dx_acquisition (
+CREATE TABLE bpm_fesa_dump.gs12dx_acquisition (
     processIndex                integer,
     sequenceIndex               integer,
 --    processStartStamp       bigint  PRIMARY KEY,

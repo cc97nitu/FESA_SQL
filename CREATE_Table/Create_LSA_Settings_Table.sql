@@ -1,0 +1,23 @@
+CREATE TABLE lsa_settings (
+    SIS18BEAM_QH		real[],
+    SIS18BEAM_QV		real[],
+    SIS18BEAM_CH		real[],
+    SIS18BEAM_CV		real[],
+    SIS18BEAM_BRHO		real[],
+    LOGICAL_GS02BE1_URF		real[],
+    SIS18OPTICS_SIGMA		real[],
+    SIS18OPTICS_TAU		real[],
+    LOGICAL_GS01KS1C_K2L		real[],
+    LOGICAL_GS03KS1C_K2L		real[],
+    LOGICAL_GS05KS1C_K2L		real[],
+    LOGICAL_GS07KS1C_K2L		real[],
+    LOGICAL_GS09KS1C_K2L		real[],
+    LOGICAL_GS11KS1C_K2L		real[],
+    LOGICAL_GS01KS3C_K2L		real[],
+    LOGICAL_GS03KS3C_K2L		real[],
+    LOGICAL_GS05KS3C_K2L		real[],
+    LOGICAL_GS07KS3C_K2L		real[],
+    LOGICAL_GS09KS3C_K2L		real[],
+    LOGICAL_GS11KS3C_K2L		real[],
+    sequenceStartStamp	bigint  PRIMARY KEY
+);

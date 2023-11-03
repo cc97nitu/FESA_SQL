@@ -2,6 +2,7 @@
 
 """Store DCCT readings to postgres."""
 
+import time
 from datetime import datetime
 import numpy as np
 import psycopg2
@@ -10,6 +11,13 @@ from psycopg2.extensions import register_adapter, AsIs
 from pyda import SimpleClient
 from pyda.data import DataFilter, TimingSelector
 from pyda_rda3 import RdaProvider
+
+
+TERMINAL_COLORS = [
+"\u001b[31m", "\u001b[32m", "\u001b[33m", "\u001b[34m", "\u001b[35m", "\u001b[36m", "\u001b[37m", "\u001b[31;1m", "\u001b[32;1m", "\u001b[33;1m", "\u001b[34;1m", "\u001b[35;1m",
+]
+
+TERMINAL_COLOR_RESET = "\u001b[0m"
 
 
 def adapt_numpy_array(numpy_array):
@@ -69,18 +77,21 @@ def main(insertionStatement) -> None:
     for response in subscription:
 
         ts = response.value["sequenceStartStamp"] / 1e9
-        print(datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f'))
+        ts_datetime = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
         
         # store in database
-        stamp = int(response.value["sequenceStartStamp"])
-        current = response.value["current"].astype(float).tolist()
+        t0 = time.time()
 
         values = [response.value[f] for f in FIELD_NAMES]
         crsr.execute(insertionStatement, values)
         dbcon.commit()
 
-        print("committed S={}:P={}".format(response.value["sequenceIndex"], response.value["processIndex"]))
+        t_end = time.time() - t0
 
+        print(TERMINAL_COLORS[1] + "DCCT" + 
+              " committed S={}:P={}".format(response.value["sequenceIndex"], response.value["processIndex"]) +
+              "    " + ts_datetime + "    completed within {:.2f}".format(t_end) +
+              TERMINAL_COLOR_RESET)
         #return response
 
     return None
@@ -89,11 +100,17 @@ def main(insertionStatement) -> None:
 ##############################################
 ############## SQL  Settings #################
 ##############################################
-DBNAME = "fesa_test"
-HOST = "140.181.85.66"
-PORT = "54321"
-USER = "fesa_tester"
-PASSWORD = "save_bpm"
+#DBNAME = "fesa_test"
+#HOST = "140.181.85.66"
+#PORT = "54321"
+#USER = "fesa_tester"
+#PASSWORD = "save_bpm"
+
+DBNAME = "bpm_fesa_dump"
+HOST = "pgsql.gsi.de"
+PORT = "8646"
+USER = "bpm_fesa_dump_slave"
+PASSWORD = "kuwLMKTcAap6mKTP"
 
 
 ##############################################
@@ -101,16 +118,17 @@ PASSWORD = "save_bpm"
 ##############################################
 PROPERTY_NAME = "GS09DT_ML/Acquisition"
 DATA_FILTER = DataFilter(requestPartialData=True)
-TABLE_NAME = "dcct"
+TABLE_NAME = "bpm_fesa_dump.dcct"
 FIELD_NAMES = ["processStartStamp", "sequenceStartStamp", "eventStamp", "acquisitionStamp", "lastInjection", "lastExtraction", Array("intensity"), "processIndex", "sequenceIndex", "ionChargeState"]
 
 
 ##############################################
 ############## FAIR Selector #################
 ##############################################
-FAIR_SELECTOR = "FAIR.SELECTOR.S=8"
+FAIR_SELECTOR = "FAIR.SELECTOR.ALL"
 
 
 if __name__ == "__main__":
+    print("monitoring DCCT into " + TABLE_NAME)
     resp = main(createInsertionStatement(TABLE_NAME, FIELD_NAMES))
 

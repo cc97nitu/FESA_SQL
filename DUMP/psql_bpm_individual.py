@@ -85,7 +85,7 @@ def main(insertionStatement) -> None:
     for response in subscription:
 
         ts = response.value["acquisitionStamp"] / 1e9
-        ts_datetime = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
+        ts_datetime = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
         
         # store in database
         t_start = time.time()
@@ -108,11 +108,17 @@ def main(insertionStatement) -> None:
 ##############################################
 ############## SQL  Settings #################
 ##############################################
-DBNAME = "fesa_test"
-HOST = "140.181.85.66"
-PORT = "54321"
-USER = "fesa_tester"
-PASSWORD = "save_bpm"
+#DBNAME = "fesa_test"
+#HOST = "140.181.85.66"
+#PORT = "54321"
+#USER = "fesa_tester"
+#PASSWORD = "save_bpm"
+
+DBNAME = "bpm_fesa_dump"
+HOST = "pgsql.gsi.de"
+PORT = "8646"
+USER = "bpm_fesa_dump_slave"
+PASSWORD = "kuwLMKTcAap6mKTP"
 
 
 ##############################################
@@ -147,7 +153,7 @@ if __name__ == "__main__":
     ############## FESA property #################
     ##############################################
     PROPERTY_NAME = "GS{:02d}DX/Acquisition".format(args.bpm)
-    TABLE_NAME = "gs{:02}dx_acquisition".format(args.bpm)
+    TABLE_NAME = "bpm_fesa_dump." + "gs{:02}dx_acquisition".format(args.bpm)
     print(PROPERTY_NAME, TABLE_NAME)
     
     # run dump loop
