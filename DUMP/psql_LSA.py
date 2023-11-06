@@ -27,7 +27,7 @@ TERMINAL_COLOR_RESET = "\u001b[0m"
 
 
 def adapt_numpy_array(numpy_array):
-    return AsIs(numpy_array.tolist())
+    return AsIs(str(numpy_array.tolist()).replace("nan", "NULL"))
 
 register_adapter(np.ndarray, adapt_numpy_array)
 register_adapter(np.int32, AsIs)
@@ -96,19 +96,17 @@ def main(pattern, functionParameters, insertionStatement) -> None:
         # store in database
         t0 = time.time()
 
-        # values = read_functionParameters(pattern, functionParameters)
-        values = [np.zeros((5,5)) for _ in functionParameters]
+        values = read_functionParameters(pattern, functionParameters)
+        # values = [np.zeros((5,5)) for _ in functionParameters]
 
         if old_values is None:
             old_values = values
         else:
             if equal_numpyArrayList(values, old_values):
-                print("nothing new")
+                # print("nothing new")
                 continue
 
-        extended_values = values + [response.value["sequenceIndex"], response.value["sequenceStartStamp"],]
-        print("len values", len(extended_values))
-        crsr.execute(insertionStatement, extended_values )
+        crsr.execute(insertionStatement, values + [pattern.getName(), response.value["sequenceIndex"], response.value["sequenceStartStamp"],] )
         dbcon.commit()
 
         t_end = time.time() - t0
@@ -118,7 +116,10 @@ def main(pattern, functionParameters, insertionStatement) -> None:
               "    " + ts_datetime + "    completed within {:.2f}".format(t_end) +
               TERMINAL_COLOR_RESET)
 
-        return read_functionParameters(pattern, functionParameters), values
+        if it == 10:
+            return read_functionParameters(pattern, functionParameters), values
+        
+        it += 1
 
     return None
 
@@ -149,12 +150,19 @@ DATA_FILTER = DataFilter(requestPartialData=True)
 ##############################################
 ############## LSA Parameter #################
 ##############################################
-FUNCTIONPARAMETER_NAMES = ["SIS18BEAM/QH","SIS18BEAM/QV","SIS18BEAM/CH","SIS18BEAM/CV","SIS18BEAM/BRHO",
-                   "LOGICAL.GS02BE1/URF","SIS18OPTICS/SIGMA","SIS18OPTICS/TAU"]
+FUNCTIONPARAMETER_NAMES = ["SIS18BEAM/QH","SIS18BEAM/QV","SIS18BEAM/CH","SIS18BEAM/CV","SIS18BEAM/BRHO", "SIS18BEAM/DPFREV",
+    "SIS18BEAM/TREV", "LOGICAL.GS02BE1/URF","SIS18OPTICS/SIGMA","SIS18OPTICS/TAU"]
+
+# quadrupoles
+FUNCTIONPARAMETER_NAMES += ["LOGICAL.GS01QS1F/K1L", "LOGICAL.GS01QS2D/K1L", "LOGICAL.GS12QS1F/K1L", "LOGICAL.GS12QS2D/K1L", "LOGICAL.GS12QS3T/K1L", "LOGICAL.GS02KQ1E/K1L",]
+
+FUNCTIONPARAMETER_NAMES += ["LOGICAL.GS{:02d}KM3QS/K1L".format(i) for i in [1,2,4,6,7,8,10,12]]
+FUNCTIONPARAMETER_NAMES += ["LOGICAL.GS{:02d}KQ4/K1L".format(i) for i in [2,4,8,10]]
 
 # sextupoles
 FUNCTIONPARAMETER_NAMES += ["LOGICAL.GS{:02d}KS1C/K2L".format(i) for i in [1,3,5,7,9,11]]
 FUNCTIONPARAMETER_NAMES += ["LOGICAL.GS{:02d}KS3C/K2L".format(i) for i in [1,3,5,7,9,11]]
+FUNCTIONPARAMETER_NAMES += ["LOGICAL.GS{:02d}KM5SS/K2L".format(i) for i in [2,8]]
 
 
 ##############################################
@@ -169,9 +177,9 @@ if __name__ == "__main__":
     functionParameters = [ps.findParameterByName(p) for p in FUNCTIONPARAMETER_NAMES]
 
     # create SQL insertion statement
-    extended_names = FUNCTIONPARAMETER_NAMES + ["sequenceIndex", "sequenceStartStamp",]
+    extended_names = FUNCTIONPARAMETER_NAMES + ["pattern", "sequenceIndex", "sequenceStartStamp",]
     formatted_names = ", ".join([s.replace("/", "_").replace(".", "_") for s in extended_names])
-    placeholders = ", ".join("ARRAY %s" for _ in FUNCTIONPARAMETER_NAMES) + ", %s", ", %s"
+    placeholders = ", ".join("ARRAY %s" for _ in FUNCTIONPARAMETER_NAMES) + ", %s" + ", %s" + ", %s"
 
     sql_insert = """
     INSERT INTO bpm_fesa_dump.lsa_settings ({}) VALUES ({});
