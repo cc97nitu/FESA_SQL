@@ -119,7 +119,7 @@ PASSWORD = "kuwLMKTcAap6mKTP"
 PROPERTY_NAME = "GS09DT_ML/Acquisition"
 DATA_FILTER = DataFilter(requestPartialData=True,frequencyFilter=np.int32(2))
 TABLE_NAME = "bpm_fesa_dump.dcct"
-FIELD_NAMES = ["processStartStamp", "sequenceStartStamp", "eventStamp", "acquisitionStamp", "lastInjection", "lastExtraction", Array("intensity"), "processIndex", "sequenceIndex", "ionChargeState"]
+FIELD_NAMES = ["processStartStamp", "sequenceStartStamp", "eventStamp", "acquisitionStamp", "lastInjection", "lastExtraction", Array("intensity"), Array("current"), "processIndex", "sequenceIndex", "ionChargeState"]
 
 
 ##############################################
