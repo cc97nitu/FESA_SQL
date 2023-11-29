@@ -4,7 +4,9 @@ create database fesa_test;
 
 ---- Create User
 CREATE USER fesa_tester WITH PASSWORD 'save_bpm';
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO fesa_tester;
 GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA public TO fesa_tester;
+
 GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA bpm_fesa_dump TO bpm_fesa_dump_slave;
 
 
